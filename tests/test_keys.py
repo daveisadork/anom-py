@@ -30,6 +30,12 @@ def test_keys_parents_must_not_be_partial():
         Key("Person", 123, parent=Key("Organization"))
 
 
+def test_keys_namespace_Must_match_parent_namespace():
+    parent = Key("Organization", 123, namespace="a")
+    with pytest.raises(ValueError):
+        Key("Person", 123, parent=parent, namespace="b")
+
+
 def test_keys_can_have_numeric_ids():
     assert Key("Person", 123).int_id == 123
     assert Key("Person", 123).str_id is None
