@@ -120,10 +120,17 @@ def test_datastore_client_uses_the_default_namespace():
     # Given that I've set a default namespace
     anom.set_default_namespace("anomspace")
 
-    # When I instantiate a DatastoreAdapter
+    # And I have a DatastoreAdapter
     adapter = anom.adapters.DatastoreAdapter()
 
-    # I expect the adapter's client to use that namespace
-    assert adapter.client.namespace == "anomspace"
+    # And the adapter hasn't instantiated a client yet
+    adapter._state.client = None
+
+    # When I get the adapter's client
+    client = adapter.client
+
+    # I expect the client's namespace to match the global default
+    assert client.namespace == "anomspace"
 
     anom.set_default_namespace()
+    adapter._state.client = None
