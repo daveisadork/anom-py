@@ -3,6 +3,7 @@ from threading import RLock
 from weakref import WeakValueDictionary
 
 from .adapter import PutRequest, get_adapter
+from .namespaces import get_namespace
 from .query import PropertyFilter, Query
 
 #: The set of known models.  This is used to look up model classes at
@@ -50,6 +51,9 @@ class Key(KeyLike, namedtuple("Key", ("kind", "id_or_name", "parent", "namespace
     def __new__(cls, kind, id_or_name=None, parent=None, namespace=None):
         if isinstance(kind, model):
             kind = kind._kind
+
+        if namespace is None:
+            namespace = get_namespace()
 
         if parent and parent.is_partial:
             raise ValueError("Cannot use partial Keys as parents.")

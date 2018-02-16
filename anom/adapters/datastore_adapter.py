@@ -7,6 +7,7 @@ from threading import local
 
 from .. import Adapter, Key
 from ..adapter import QueryResponse
+from ..namespaces import get_namespace
 from ..model import KeyLike
 from ..transaction import Transaction, TransactionFailed
 
@@ -87,7 +88,6 @@ class DatastoreAdapter(Adapter):
 
     Parameters:
       project(str, optional): The project this Adapter should connect to.
-      namespace(str, optional): The namespace inside which this
         Adapter should operate by default.  Individual Datastore Keys
         may specify their own namespaces and override this.
       credentials(datastore.Credentials): The OAuth2 Credentials to
@@ -97,9 +97,8 @@ class DatastoreAdapter(Adapter):
 
     _state = local()
 
-    def __init__(self, *, project=None, namespace=None, credentials=None):
+    def __init__(self, *, project=None, credentials=None):
         self.project = project
-        self.namespace = namespace
         self.credentials = credentials
 
     @property
@@ -112,7 +111,7 @@ class DatastoreAdapter(Adapter):
             client = self._state.client = datastore.Client(
                 credentials=self.credentials,
                 project=self.project,
-                namespace=self.namespace,
+                namespace=get_namespace(),
                 _http=DatastoreRequestsProxy(),
                 _use_grpc=False,
             )
@@ -150,6 +149,7 @@ class DatastoreAdapter(Adapter):
                 request_keys.remove(key)
 
         results = [None] * len(keys)
+        print(datastore_keys)
         for entity in found:
             index = datastore_keys.index(entity.key)
             results[index] = self._prepare_to_load(entity)
@@ -231,7 +231,10 @@ class DatastoreAdapter(Adapter):
             yield prop, op, value
 
     def _convert_key_to_datastore(self, anom_key):
-        return self.client.key(*anom_key.path, namespace=anom_key.namespace)
+        namespace = anom_key.namespace
+        if anom_key.namespace == "":
+            namespace = None
+        return self.client.key(*anom_key.path, namespace=namespace)
 
     @staticmethod
     def _convert_key_from_datastore(datastore_key):
