@@ -30,7 +30,12 @@ def test_keys_parents_must_not_be_partial():
         Key("Person", 123, parent=Key("Organization"))
 
 
-def test_keys_namespace_Must_match_parent_namespace():
+def test_key_inherits_parents_namespace():
+    parent = Key("Organization", 123, namespace="a")
+    assert Key("Person", 123, parent=parent).namespace == parent.namespace
+
+
+def test_keys_namespace_must_match_parent_namespace():
     parent = Key("Organization", 123, namespace="a")
     with pytest.raises(ValueError):
         Key("Person", 123, parent=parent, namespace="b")
