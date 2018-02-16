@@ -55,7 +55,13 @@ class Key(KeyLike, namedtuple("Key", ("kind", "id_or_name", "parent", "namespace
         if parent and parent.is_partial:
             raise ValueError("Cannot use partial Keys as parents.")
 
-        if namespace is None:
+        if parent:
+            if namespace is not None:
+                if namespace != parent.namespace:
+                    raise ValueError(f"Namespace {namespace!r} is different from parent namespace {parent.namespace!r}")
+            else:
+                namespace = parent.namespace
+        elif namespace is None:
             namespace = get_namespace()
 
         return super().__new__(cls, kind, id_or_name, parent, namespace)
