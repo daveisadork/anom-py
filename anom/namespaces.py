@@ -29,7 +29,6 @@ def get_namespace():
     try:
         return _namespace.current
     except AttributeError:
-        global _default_namespace
         _namespace.current = _default_namespace
         return _namespace.current
 
@@ -44,7 +43,6 @@ def set_namespace(namespace=None):
       None
     """
     if namespace is None:
-        global _default_namespace
         namespace = _default_namespace
     _namespace.current = namespace
 
