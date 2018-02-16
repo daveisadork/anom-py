@@ -149,7 +149,6 @@ class DatastoreAdapter(Adapter):
                 request_keys.remove(key)
 
         results = [None] * len(keys)
-        print(datastore_keys)
         for entity in found:
             index = datastore_keys.index(entity.key)
             results[index] = self._prepare_to_load(entity)
