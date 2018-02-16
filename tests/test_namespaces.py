@@ -116,9 +116,9 @@ def test_namespaces_persist_through_changes_once_set(default_namespace):
     assert query.namespace == "monaspace"
 
 
-def test_datastore_client_uses_the_default_namespace(datastore_adapter):
+def test_datastore_client_uses_the_default_namespace():
     # Given that I've set a default namespace
     anom.set_default_namespace("anomspace")
 
     # I expect the datastore adapter's client to use that namespace
-    assert datastore_adapter.client.namespace == "anomspace"
+    assert anom.DatastoreAdapter().client.namespace == "anomspace"

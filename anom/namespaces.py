@@ -28,10 +28,12 @@ def get_namespace():
     Returns:
       str: The current thread-local default namespace.
     """
-    if not hasattr(_namespace, "current"):
+    try:
+        return _namespace.current
+    except AttributeError:
         global _default_namespace
         _namespace.current = _default_namespace
-    return _namespace.current
+        return _namespace.current
 
 
 def set_namespace(namespace=None):

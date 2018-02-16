@@ -36,12 +36,13 @@ def noop_adapter():
 
 @pytest.fixture(params=[None, "namespace"])
 def default_namespace(request):
-    yield set_default_namespace(request.param)
+    namespace = getattr(request, "param", None)
+    yield set_default_namespace(namespace)
     set_default_namespace(None)
 
 
 @pytest.fixture
-def datastore_adapter(emulator, default_namespace):
+def datastore_adapter(emulator):
     adapter = adapters.DatastoreAdapter()
     adapter = set_adapter(adapter)
     yield adapter
@@ -60,7 +61,7 @@ def memcache_adapter(datastore_adapter, memcache_client):
 
 
 @pytest.fixture(params=["datastore_adapter", "memcache_adapter"])
-def adapter(request):
+def adapter(request, default_namespace):
     return request.getfixturevalue(request.param)
 
 

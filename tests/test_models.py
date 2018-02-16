@@ -101,6 +101,5 @@ def test_models_can_have_custom_kinds(adapter):
     assert e.delete() is None
 
 
-def test_default_model_key_uses_default_namespace(adapter, namespace):
-    namespace = namespace or ""
-    assert Person().key.namespace == namespace
+def test_default_model_key_uses_default_namespace(adapter, default_namespace):
+    assert Person().key.namespace == default_namespace
