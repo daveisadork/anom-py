@@ -15,10 +15,8 @@ def set_default_namespace(namespace=None):
     Returns:
       str: The input namespace
     """
-    if namespace is None:
-        namespace = ""
     global _default_namespace
-    _namespace.current = _default_namespace = namespace
+    _namespace.current = _default_namespace = namespace or ""
     return _default_namespace
 
 

@@ -262,7 +262,7 @@ class Query(namedtuple("Query", (
             cls, kind=None, *, ancestor=None, namespace=None,
             projection=(), filters=(), orders=(), offset=0, limit=None,
     ):
-        from .model import get_adapter, lookup_model_by_kind
+        from .model import lookup_model_by_kind
 
         if kind is None:
             model = None

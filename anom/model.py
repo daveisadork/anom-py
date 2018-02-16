@@ -52,11 +52,11 @@ class Key(KeyLike, namedtuple("Key", ("kind", "id_or_name", "parent", "namespace
         if isinstance(kind, model):
             kind = kind._kind
 
-        if namespace is None:
-            namespace = get_namespace()
-
         if parent and parent.is_partial:
             raise ValueError("Cannot use partial Keys as parents.")
+
+        if namespace is None:
+            namespace = get_namespace()
 
         return super().__new__(cls, kind, id_or_name, parent, namespace)
 

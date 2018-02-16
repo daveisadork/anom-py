@@ -230,10 +230,7 @@ class DatastoreAdapter(Adapter):
             yield prop, op, value
 
     def _convert_key_to_datastore(self, anom_key):
-        namespace = anom_key.namespace
-        if anom_key.namespace == "":
-            namespace = None
-        return self.client.key(*anom_key.path, namespace=namespace)
+        return self.client.key(*anom_key.path, namespace=anom_key.namespace or None)
 
     @staticmethod
     def _convert_key_from_datastore(datastore_key):
